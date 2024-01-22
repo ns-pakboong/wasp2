@@ -1,0 +1,54 @@
+/* Profile.css */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  body {
+    background-image: url('D:\wasp-app_2\src\greg-rosenke-6QnEf_b47eA-unsplash.jpg'); /* Replace with a valid URL */
+    background-size: cover;
+    background-position: center;
+    font-family: 'Arial', sans-serif;
+    min-height: 100%;
+    background-attachment: fixed;
+  }
+  
+  .container {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    margin-top: 50px;
+  }
+  
+  /* Add the following styles to arrange images horizontally */
+  .img-thumbnail {
+    width: 150px;
+    height: auto;
+  }
+  
+  .profile-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+    margin: 5px;
+  }
+
+  /* Profile.css */
+
+.image-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* หรืออื่น ๆ ตามที่คุณต้องการ */
+  margin-top: 20px; /* ปรับตามที่ต้องการ */
+}
+
+.image-list-container img {
+  width: 100%; /* ทำให้รูปภาพเต็มความกว้างของพื้นที่ที่กำหนด */
+  height: auto; /* จัดให้สูงอัตโนมัติเมื่อกว้างเต็ม */
+  margin-bottom: 10px; /* ปรับตามที่ต้องการ */
+}
+
+  

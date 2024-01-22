@@ -1,0 +1,42 @@
+/* Signup.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.container {
+    margin-top: 50px;
+  }
+  
+  .form-floating {
+    position: relative;
+  }
+  
+  .form-floating input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .d-grid {
+    margin-top: 15px;
+  }
+  
+  .btn-primary {
+    /* Add custom button styles */
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    padding: 15px; /* Padding - adjust as needed */
+    font-size: 18px; /* Font size - adjust as needed */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add border radius for rounded corners */
+    cursor: pointer;
+  }
+  
+  .alert {
+    margin-bottom: 15px;
+  }
+  
+  .text-center {
+    margin-top: 15px;
+  }
+  
+  /* Add any additional styles you need for your form here */
+  
