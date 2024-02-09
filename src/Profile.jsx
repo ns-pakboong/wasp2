@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { auth, storage} from "./firebase";
+import { auth, storage } from "./firebase";
 import { signOut } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
-import {push, ref as ref2, set} from "firebase/database";
-import {database} from "./firebase"
+import { push, ref as ref2, set, onValue } from "firebase/database";
+import { database } from "./firebase";
 import "./Profile.css";
 import styled from "styled-components";
 
@@ -15,7 +15,7 @@ const Profile = () => {
   const [imageList, setImageList] = useState([]);
   const [userId, setUserId] = useState(null);
   const ImageListRef = ref(storage, "images/" + userId + "/");
-
+  const [data, setData] = useState(null);
   const logoutUser = async (e) => {
     e.preventDefault();
     await signOut(auth);
@@ -24,8 +24,6 @@ const Profile = () => {
 
   const [circles, setCircles] = useState([]);
 
-
-  
   const getClickCoords = (event) => {
     // from: https://stackoverflow.com/a/29296049/14198287
     var e = event.target;
@@ -34,47 +32,42 @@ const Profile = () => {
     var y = event.clientY - dim.top;
     return [x, y];
   };
- 
 
   const addCircle = (event) => {
     // get click coordinates
     let [x, y] = getClickCoords(event);
-    
+
     const pointName = window.prompt("Enter name for the clicked point:");
-    console.log("OK")
-   
-  // If the user enters a name, create the circle with the name
-  if (pointName) {
-    const dbRef = ref2(database, "place_point/" + pointName);
-    set(dbRef,{
-      x: x,
-      y: y,
-      status: false
-    });
-        
-    
-    let newCircle = (
-      <circle
-        key={pointName}
-        id={pointName}
-        cx={x}
-        cy={y}
-        r="20"
-        stroke="black"
-        strokeWidth="1"
-        fill="red"
-      />
-    );
+    //console.log("OK")
 
-    
-    let allCircles = [...circles, newCircle];
+    // If the user enters a name, create the circle with the name
+    if (pointName) {
+      const dbRef = ref2(database, "place_point/" + pointName);
+      set(dbRef, {
+        x: x,
+        y: y,
+        name: pointName,
+        status: false,
+      });
 
-    
-    setCircles(allCircles);
-  }
+      let newCircle = (
+        <circle
+          key={pointName}
+          id={pointName}
+          cx={x}
+          cy={y}
+          r="20"
+          stroke="black"
+          strokeWidth="1"
+          fill="red"
+        />
+      );
+
+      let allCircles = [...circles, newCircle];
+
+      setCircles(allCircles);
+    }
   };
-
-
 
   const uploadImage = () => {
     console.log("Uploading");
@@ -114,10 +107,25 @@ const Profile = () => {
         .catch((error) => {
           console.error("Error fetching image list:", error);
         });
+
+      //Fetch data from Firebase
+      const fetchData = async () => {
+        try {
+          const dataRef = ref2(database, "place_point"); // Reference to the root of your database
+          onValue(dataRef, (snapshot) => {
+            const fetchedData = snapshot.val();
+            // Update component state with fetched data
+            setData(fetchedData);
+          });
+        } catch (error) {
+          console.error("Error fetching data:", error.message);
+        }
+      };
+
+      fetchData(); // Call fetchData function
     }
   }, [currentUser, ImageListRef]);
 
- 
   return (
     <div className="container">
       <div className="row justify-content-center">
@@ -158,6 +166,34 @@ const Profile = () => {
       <ContainerWithBackgroundImage>
         <ClickableSVG onClick={addCircle}>
           {/* This loads your circles in the circles hook here */}
+          {data &&
+            Object.entries(data).map(([key, value]) => (
+              <CircleWithLabel key={key} >
+              <circle
+                key={key}
+                id={key}
+                cx={value.x}
+                cy={value.y}
+                r="20"
+                stroke="black"
+                strokeWidth="1"
+                fill={value.status ? "green" : "red"}
+              />
+
+<text
+              x={value.x}
+              y={value.y}
+              textAnchor="middle"
+              dy="-30" // Adjust vertical position as needed
+              fill="blue"
+              fontWeight="bold"
+              fontSize="20px"
+              
+            >
+              {value.name}
+            </text>
+          </CircleWithLabel>
+            ))}
           {circles}
         </ClickableSVG>
       </ContainerWithBackgroundImage>
@@ -188,4 +224,8 @@ const ClickableSVG = styled.svg`
   & * {
     pointer-events: none;
   }
+`;
+
+const CircleWithLabel = styled.g`
+  cursor: pointer;
 `;
