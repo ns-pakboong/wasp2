@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./bootstrap.min.css";
 import React, { useContext } from 'react';
 import {UserProvider, UserContext } from "./UserContext";
+
+
 function App  ()  {
   const currentUser = useContext(UserContext)
 
@@ -21,9 +23,11 @@ function App  ()  {
             <Route path = "/profile" element = { <Profile></Profile> }></Route>
             <Route path = "/DataDisplay" element = { <DataDisplay></DataDisplay> }></Route>
           </Route>
+        
           
       </Routes>
     </BrowserRouter>
+    
     
 
   );
