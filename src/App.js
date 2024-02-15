@@ -1,12 +1,11 @@
-import Layout from "./Layout";
-import Login from "./Login";
-import Signup from "./Signup";
-import Profile from "./Profile";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Profile from "./components/Profile";
 import DataDisplay from "./components/DataDisplay";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./bootstrap.min.css";
+import "./components/bootstrap.min.css";
 import React, { useContext } from 'react';
-import {UserProvider, UserContext } from "./UserContext";
+import {UserProvider, UserContext } from "./components/js/UserContext";
 
 
 function App  ()  {
@@ -17,14 +16,12 @@ function App  ()  {
     <BrowserRouter>
       <Routes>
         
-          <Route path = "/" element = { <Layout></Layout> }>
-            <Route index element = { <Login/> }></Route>
+            
+            <Route path = "/" element =  { <Login/> }></Route>
             <Route path = "/Signup" element = { <Signup></Signup> } ></Route>
             <Route path = "/profile" element = { <Profile></Profile> }></Route>
             <Route path = "/DataDisplay" element = { <DataDisplay></DataDisplay> }></Route>
-          </Route>
-        
-          
+    
       </Routes>
     </BrowserRouter>
     

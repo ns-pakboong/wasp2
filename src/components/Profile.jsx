@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { auth, storage } from "./firebase";
+import { auth, storage } from "./js/firebase";
 import { signOut } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { push, ref as ref2, set, onValue } from "firebase/database";
-import { database } from "./firebase";
+import { database } from "./js/firebase";
 import "./Profile.css";
 import styled from "styled-components";
 
@@ -108,26 +108,38 @@ const Profile = () => {
           console.error("Error fetching image list:", error);
         });
 
-      //Fetch data from Firebase
-      const fetchData = async () => {
-        try {
-          const dataRef = ref2(database, "place_point"); // Reference to the root of your database
-          onValue(dataRef, (snapshot) => {
-            const fetchedData = snapshot.val();
-            // Update component state with fetched data
-            setData(fetchedData);
+        const fetchData = () => {
+          const dataRef = ref2(database, "place_point");
+          const unsubscribe = onValue(dataRef, (snapshot) => {
+            setData(snapshot.val() || {});
           });
-        } catch (error) {
-          console.error("Error fetching data:", error.message);
-        }
-      };
+    
+          return () => {
+            // Unsubscribe when component unmounts
+            unsubscribe();
+          };
+        };
+      
 
       fetchData(); // Call fetchData function
+    // Set interval for fetching data every 5 minutes (adjust interval as needed)
+    const interval = setInterval(fetchData, 10 * 1000); // 5 minutes in milliseconds
+
+    return () => {
+      // Clear interval when component unmounts or when currentUser changes
+      clearInterval(interval);
+    };
     }
   }, [currentUser, ImageListRef]);
+  const handleInformation = () => {
+    // Add your logic here for handling the information button click
+    alert("This is information about the plant chart.");
+  };
 
   return (
+    
     <div className="container">
+
       <div className="row justify-content-center">
         <div className="col-md-4 text-center">
           <p>
@@ -135,6 +147,7 @@ const Profile = () => {
             <em className="text-decoration-underline">{currentUser.email}</em>.
             You are logged in!
           </p>
+          
           <div className="d-grid gap-2">
             <button
               type="submit"
@@ -143,6 +156,7 @@ const Profile = () => {
             >
               Logout
             </button>
+            <button onClick={handleInformation}>Show Information</button>
           </div>
         </div>
       </div>
@@ -197,6 +211,7 @@ const Profile = () => {
           {circles}
         </ClickableSVG>
       </ContainerWithBackgroundImage>
+      
     </div>
   );
 };
